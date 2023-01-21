@@ -1,0 +1,11 @@
+{{define "title"}}Open Source{{end}}
+
+{{define "main"}}
+    <h1>Open Source</h1>
+    {{range $element := .Data}}
+        <div class="project">
+            <a target="_blank" href="{{$element.HTMLURL}}">{{$element.Name}}</a>
+            <p>{{$element.Description}}</p>
+        </div>
+    {{end}}
+{{end}}

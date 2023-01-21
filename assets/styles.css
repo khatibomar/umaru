@@ -66,3 +66,37 @@ h3::before {
     color: var(--maincolor);
     content: '### ';
 }
+
+.cards-container {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px dashed black;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    margin-left: 8px;
+    width: 150px;
+    background-color: antiquewhite;
+}
+
+.card a {
+    border: none;
+}
+
+.card p {
+    text-align: center;
+}
+
+.card img {
+    width: 150px;
+    height: 220.7px;
+}
+
+.project {
+    border: 1px solid black;
+    margin-bottom: 5px;
+    padding: 10px;
+    background-color: aliceblue;
+}
