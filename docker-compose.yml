@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  backend:
+    container_name: umaru
+    build:
+      context: . 
+      dockerfile: Dockerfile
+      args:
+        GO_PORT: ${GO_PORT:-4000} 
+        GO_ENV: "development" 
+        CORS_TRUSTED_ORIGINS: ${CORS_TRUSTED_ORIGINS:-localhost:4000 localhost:5000 localhost:6000}
+    ports:
+      - ${GO_PORT:-4000}:${GO_PORT:-4000}
+    restart: unless-stopped

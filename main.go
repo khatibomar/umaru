@@ -44,7 +44,8 @@ func talks(w http.ResponseWriter, r *http.Request) {
 func renderPage(w http.ResponseWriter, page string) {
 	files := []string{
 		"./templates/base.html",
-		"./templates/" + page + ".html",
+		"./templates/partials/nav.html",
+		"./templates/pages/" + page + ".html",
 	}
 
 	ts, err := template.ParseFiles(files...)
