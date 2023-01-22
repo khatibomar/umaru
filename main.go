@@ -83,8 +83,8 @@ func talks(w http.ResponseWriter, r *http.Request) {
 	renderPage(w, "talks", nil)
 }
 
-func gallery(w http.ResponseWriter, r *http.Request) {
-	renderPage(w, "gallery", nil)
+func blog(w http.ResponseWriter, r *http.Request) {
+	renderPage(w, "blog", nil)
 }
 
 func openSource(w http.ResponseWriter, r *http.Request) {
@@ -159,7 +159,7 @@ func main() {
 	mux.HandleFunc("/talks", talks)
 	mux.HandleFunc("/quotes", quotes)
 	mux.HandleFunc("/anime", anime)
-	mux.HandleFunc("/gallery", gallery)
+	mux.HandleFunc("/blog", blog)
 	mux.HandleFunc("/about", about)
 
 	log.Print("Starting server on :4000")
