@@ -24,8 +24,38 @@ func home(w http.ResponseWriter, r *http.Request) {
 	renderPage(w, "home", nil)
 }
 
-func readings(w http.ResponseWriter, r *http.Request) {
-	renderPage(w, "readings", nil)
+func bookshelf(w http.ResponseWriter, r *http.Request) {
+	reading := []internals.Book{
+		{
+			Name:  "SQL Antipatterns, Volume 1",
+			Link:  "https://pragprog.com/titles/bksap1/sql-antipatterns-volume-1/",
+			Image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1348552520l/7959038.jpg",
+		},
+	}
+
+	done := []internals.Book{
+		{
+			Name:  "The Art Of Postgres",
+			Link:  "https://theartofpostgresql.com/",
+			Image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1567060454l/52755483._SX318_SY475_.jpg",
+		},
+	}
+
+	wantToRead := []internals.Book{
+		{
+			Name:  "Another Monster: investigate special",
+			Link:  "https://www.amazon.com/Another-Monster-investigative-special-%E3%82%82%E3%81%86%E3%81%B2%E3%81%A8%E3%81%A4%E3%81%AEMONSTER/dp/4091852793",
+			Image: "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1344467528l/6076366.jpg",
+		},
+	}
+
+	books := internals.Books{
+		Reading:  reading,
+		Done:     done,
+		WantRead: wantToRead,
+	}
+
+	renderPage(w, "bookshelf", books)
 }
 
 func about(w http.ResponseWriter, r *http.Request) {
@@ -155,7 +185,7 @@ func main() {
 
 	mux.HandleFunc("/", home)
 	mux.HandleFunc("/open-source", openSource)
-	mux.HandleFunc("/readings", readings)
+	mux.HandleFunc("/bookshelf", bookshelf)
 	mux.HandleFunc("/talks", talks)
 	mux.HandleFunc("/quotes", quotes)
 	mux.HandleFunc("/anime", anime)

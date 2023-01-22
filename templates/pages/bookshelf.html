@@ -1,0 +1,43 @@
+{{define "title"}}Bookshelf{{end}}
+
+{{define "main"}}
+    <h1>Bookshelf</h1>
+    <h2>Currently reading</h2>
+    <div class="cards-container">
+        {{range $element := .Data.Reading}}
+        <div class="card">
+            <div class="card-img">
+                <a target="_blank" href="{{$element.Link}}">
+                    <img src="{{$element.Image}}"/>
+                </a>
+            </div>
+        </div>
+        {{end}}
+    </div>
+
+    <h2>Done</h2>
+    <div class="cards-container">
+        {{range $element := .Data.Done}}
+        <div class="card">
+            <div class="card-img">
+                <a target="_blank" href="{{$element.Link}}">
+                    <img src="{{$element.Image}}"/>
+                </a>
+            </div>
+        </div>
+        {{end}}
+    </div>
+        
+    <h2>Want to read</h2>
+    <div class="cards-container">
+        {{range $element := .Data.WantRead}}
+        <div class="card">
+            <div class="card-img">
+                <a target="_blank" href="{{$element.Link}}">
+                    <img src="{{$element.Image}}"/>
+                </a>
+            </div>
+        </div>
+        {{end}}
+    </div>
+{{end}}

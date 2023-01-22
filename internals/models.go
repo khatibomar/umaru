@@ -26,3 +26,15 @@ type MyAnimeList struct {
 		Next string `json:"next"`
 	} `json:"paging"`
 }
+
+type Book struct {
+	Name  string
+	Image string
+	Link  string
+}
+
+type Books struct {
+	WantRead []Book
+	Done     []Book
+	Reading  []Book
+}
