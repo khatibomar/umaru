@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -10,7 +10,10 @@ import (
 	"time"
 
 	"codeberg.org/omarkhatib/umaru/internals"
+	goCache "github.com/patrickmn/go-cache"
 )
+
+var cache = goCache.New(12*time.Hour, 24*time.Hour)
 
 func home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
@@ -34,7 +37,46 @@ func quotes(w http.ResponseWriter, r *http.Request) {
 }
 
 func anime(w http.ResponseWriter, r *http.Request) {
-	renderPage(w, "anime", nil)
+	url := "https://api.myanimelist.net/v2/users/UmaruKh/animelist?limit=500"
+	var res internals.MyAnimeList
+
+	cachedResult, found := cache.Get("anime")
+	if found {
+		res = cachedResult.(internals.MyAnimeList)
+	} else {
+		client := &http.Client{}
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		req.Header.Add("X-MAL-Client-ID", `6114d00ca681b7701d1e15fe11a4987e`)
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		defer resp.Body.Close()
+
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+
+		err = json.Unmarshal(body, &res)
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		cache.Add("anime", res, goCache.DefaultExpiration)
+	}
+
+	renderPage(w, "anime", res)
 }
 
 func talks(w http.ResponseWriter, r *http.Request) {
@@ -47,26 +89,35 @@ func gallery(w http.ResponseWriter, r *http.Request) {
 
 func openSource(w http.ResponseWriter, r *http.Request) {
 	url := "https://codeberg.org/api/v1/users/omarkhatib/repos?limit=500"
-	resp, err := http.Get(url)
-	if err != nil {
-		log.Print(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Print(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
 	var res internals.GithubRepos
-	err = json.Unmarshal(body, &res)
-	if err != nil {
-		log.Print(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-		return
+
+	cachedResult, found := cache.Get("open-source")
+	if found {
+		res = cachedResult.(internals.GithubRepos)
+	} else {
+		resp, err := http.Get(url)
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		defer resp.Body.Close()
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+
+		err = json.Unmarshal(body, &res)
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+		cache.Add("open-source", res, goCache.DefaultExpiration)
 	}
+
 	renderPage(w, "opensource", res)
 }
 
