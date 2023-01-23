@@ -12,11 +12,9 @@ ENV APP_NAME umaru
 
 ARG GO_PORT=4000
 ARG GO_ENV="development"
-ARG CORS_TRUSTED_ORIGINS="*"
 
 ENV GO_PORT=${GO_PORT}
 ENV GO_ENV=${GO_ENV}
-ENV CORS_TRUSTED_ORIGINS=${CORS_TRUSTED_ORIGINS}
 
 ENV APP_PATH=./${APP_NAME}
 
@@ -24,4 +22,4 @@ COPY --from=build-env /$APP_NAME/$APP_NAME .
 COPY --from=build-env /$APP_NAME/templates ./templates
 COPY --from=build-env /$APP_NAME/assets ./assets
 
-CMD ${APP_PATH} -port ${GO_PORT} -env ${GO_ENV} -cors-trusted-origins="${CORS_TRUSTED_ORIGINS}"
+CMD ${APP_PATH} -port ${GO_PORT} -env ${GO_ENV}

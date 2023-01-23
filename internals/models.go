@@ -1,5 +1,7 @@
 package internals
 
+import "codeberg.org/omarkhatib/umaru/database"
+
 type GithubRepos []struct {
 	Name        string `json:"name"`
 	HTMLURL     string `json:"html_url"`
@@ -34,7 +36,7 @@ type Book struct {
 }
 
 type Books struct {
-	WantRead []Book
-	Done     []Book
-	Reading  []Book
+	Reading  []database.GetReadingBookRow
+	Done     []database.GetDoneBooksRow
+	WantRead []database.GetWantToReadBooksRow
 }

@@ -12,6 +12,8 @@ services:
         CORS_TRUSTED_ORIGINS: ${CORS_TRUSTED_ORIGINS:-localhost:4000 localhost:5000 localhost:6000}
     ports:
       - ${GO_PORT:-4000}:${GO_PORT:-4000}
+    environment:
+      UMARU_DB_DSN: "postgres://postgres:dev1234@postgres/umaru?sslmode=disable"
     restart: unless-stopped
     depends_on: 
       - postgres
