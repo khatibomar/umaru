@@ -13,3 +13,34 @@ services:
     ports:
       - ${GO_PORT:-4000}:${GO_PORT:-4000}
     restart: unless-stopped
+    depends_on: 
+      - postgres
+  postgres:
+    container_name: postgres
+    image: postgres:15.1
+    environment:
+     - POSTGRES_USER=postgres
+     - POSTGRES_PASSWORD=dev1234
+     - POSTGRES_DB=umaru
+    ports:
+     - 5432:5432
+    volumes: 
+     - pgdata:/var/lib/postgresql/data:rw
+    restart: unless-stopped
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: dev@dev.com 
+      PGADMIN_DEFAULT_PASSWORD: dev1234 
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+    - "8889:80"
+    restart: unless-stopped
+    volumes:
+      - pgadmin:/var/lib/pgadmin 
+    depends_on:
+      - postgres
+volumes:
+ pgdata:
+ pgadmin:
