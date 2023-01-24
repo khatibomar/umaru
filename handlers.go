@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"text/template"
 	"time"
@@ -20,6 +21,17 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
+	}
+
+	ip := ReadUserIP(r)
+	f, err := os.OpenFile("ips.log",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Println(err)
+	}
+	defer f.Close()
+	if _, err := f.WriteString(ip + "\n"); err != nil {
+		log.Println(err)
 	}
 
 	renderPage(w, "home", nil)
