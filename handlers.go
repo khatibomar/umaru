@@ -152,6 +152,13 @@ func (app *application) openSource(w http.ResponseWriter, r *http.Request) {
 			app.serverError(w, err)
 			return
 		}
+		i := 0
+		j := len(res) - 1
+		for i < j {
+			res[i], res[j] = res[j], res[i]
+			i++
+			j--
+		}
 		cache.Add("open-source", res, goCache.DefaultExpiration)
 	}
 
